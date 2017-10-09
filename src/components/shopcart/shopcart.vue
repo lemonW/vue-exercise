@@ -3,13 +3,13 @@
         <!-- 1.0 商品信息的列表 -->
         <div class="goodsListStyle">
             <div class="everyItemStyle" v-for="(item,index) in goodsList" :key="item.id">
-                <!-- 1.0 开关 -->
+                <!-- 开关 -->
                 <mt-switch @change="statisticsTotalCountAndTotalPrice" v-model="switchValues[index]"></mt-switch>
 
-                <!-- 2.0 缩略图 -->
+                <!-- 缩略图 -->
                 <img :src="item.thumb_path">
 
-                <!-- 3.0 商品价格和数量的信息 -->
+                <!-- 商品价格和数量的信息 -->
                 <div class="priceAndCountStyle">
                     <h5>{{item.title}}</h5>
                     <p>
