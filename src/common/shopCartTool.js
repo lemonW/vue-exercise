@@ -8,7 +8,7 @@ const key = "goodslist"
 
 export function addGoods(goodsObj) {
     //1.先取出原有的数据，并且转成数组
-    var goodsArray = JSON.parse(localStorage.getItem(key) || '[]')
+    let goodsArray = JSON.parse(localStorage.getItem(key) || '[]')
 
     //2.将刚刚传递进来的goodsObj，push到数组的最后一个
     goodsArray.push(goodsObj)
@@ -20,11 +20,11 @@ export function addGoods(goodsObj) {
 //获取我们商品的总数量
 export function getGoodsTotalCount() {
     //1.先取出原有的数据，并且转成数组
-    var goodsArray = JSON.parse(localStorage.getItem(key) || '[]')
+    let goodsArray = JSON.parse(localStorage.getItem(key) || '[]')
 
     //循环添加拼接我们的数量
-    var totalCount = 0
-    for (var i = 0; i < goodsArray.length; i++) {
+    let totalCount = 0
+    for (let i = 0; i < goodsArray.length; i++) {
         totalCount += parseInt(goodsArray[i].count || '0')
     }
 
@@ -49,16 +49,18 @@ export function getGoodsArray() {
  */
 export function deleteGoodsById(goodsId) {
     //1.先取出原有的数据，并且转成数组
-    var goodsArray = JSON.parse(localStorage.getItem(key) || '[]')
+    let goodsArray = JSON.parse(localStorage.getItem(key) || '[]')
 
     //2.删除符合要求的所有的商品的数量
-    // for(var i = 0 ;i<goodsArray.length;i++){
+    // for(let i = 0 ;i<goodsArray.length;i++){
     //     if(goodsId==goodsArray[i].goodsId){
     //         goodsArray.splice(i,1)
+                //保证索引值不变，解决错位的影响
     //         i--
     //     }
     // }
-    for (var i = goodsArray.length - 1; i >= 0; i--) {
+    //倒序删除，这样就不会影响到原来的索引
+    for (let i = goodsArray.length - 1; i >= 0; i--) {
         if (goodsId == goodsArray[i].goodsId) {
             goodsArray.splice(i, 1)
         }

@@ -79,6 +79,8 @@ img {
 // 	$("#badgeId").text(newCount)
 // })
 
+import {getGoodsTotalCount} from './common/shopCartTool'
+
 export default {
 	data() {
 		return {
@@ -93,6 +95,8 @@ export default {
 		this.$root.newBus.$on('goodsCount', (goodsCount) => {
 			this.count += goodsCount
 		})
+
+		this.getGoodsCount()
 	},
 	methods: {
 		goBack() {
@@ -108,6 +112,9 @@ export default {
 				this.isShowBack = true //显示隐藏按钮
 				this.isShowTabBar = false
 			}
+		},
+		getGoodsCount() {
+			this.count = getGoodsTotalCount();
 		}
 	},
 	watch: {

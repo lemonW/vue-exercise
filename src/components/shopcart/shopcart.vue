@@ -79,9 +79,6 @@
     width: 55px;
 }
 
-
-
-
 /* 2.0 商品统计信息的样式 */
 
 .goodsListStatisticsInfoStyle {
@@ -127,7 +124,7 @@ export default {
             goodsList: [],
             totalCount: 0, //统计时的总数量
             totalPrice: 0,//统计时的总价格
-            switchValues: []//开关的状态
+            switchValues: []//开关的状态,保证各个商品有各自的布尔值
         }
     },
     created() {
@@ -138,6 +135,10 @@ export default {
         getGoodsListData() {
             //1.去先从localStorage中获取我们所有原先保存的商品数组
             const localGoodsList = getLocalGoodsList()
+
+            if(localGoodsList == '[]') {
+                return
+            }
 
             //2.把里面id相同的每一项的数值合并,合并成对象
             //[{"goodsId":"88","count":4},{"goodsId":"88","count":3}]
@@ -164,11 +165,11 @@ export default {
             const url = common.apihost + "api/goods/getshopcarlist/" + idsString
 
             this.$http.get(url).then(response => {
-                //遍历服务器返回的数组的每一项，给他动态添加一个count属性
-                //巧妙的利用这里的循环，给我们的switchValues赋值
+                //遍历服务器返回的数组的每一项，给他动态添加一个count属性，以便渲染
+                //同时利用这里的循环，给switchValues赋值，控制开关
                 response.body.message.forEach(item => {
                     item.count = localObject[item.id]
-                    //给switchValues赋值
+                    //给switchValues赋值，默认true
                     this.switchValues.push(true)
                 })
 
@@ -184,6 +185,7 @@ export default {
 
             //循环的目的是为了获取哪个索引需要统计，而我们switchValues和goodsList的索引是一样的
             this.switchValues.forEach((item, i) => {
+                //只计算 开 状态的
                 if (item) {
                     tempCount += this.goodsList[i].count
                     tempPrice += this.goodsList[i].count * this.goodsList[i].sell_price
@@ -197,15 +199,16 @@ export default {
         //删除商品
         deleteGoods(index) {
             MessageBox.confirm('确定删除该商品吗?').then(action => {
+                //console.log(action) //confirm
+
                 //1.更改徽标的值
                 const changeCount = this.goodsList[index].count
-
                 this.$root.newBus.$emit('goodsCount', -changeCount)
 
                 //2.删除localStorage中对应id的值
                 deleteGoodsById(this.goodsList[index].id)
 
-                //3.删除goodsList & switchValues中对应索引的数据
+                //3.最后删除goodsList & switchValues中对应索引的数据
                 this.goodsList.splice(index, 1)
                 this.switchValues.splice(index, 1)
 
