@@ -31,6 +31,11 @@ export function getGoodsTotalCount() {
     return totalCount
 }
 
+//从localStorage中获取我们当时保存的商品数组
+export function getLocalGoodsList(){
+    return JSON.parse(localStorage.getItem(key) || '[]')
+}
+
 //获取商品名字
 export function getGoodsArray() {
     return JSON.parse(localStorage.getItem(key) || '[]')

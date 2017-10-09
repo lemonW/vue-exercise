@@ -114,5 +114,9 @@ const router = new VueRouter({
 new Vue({
     el: '#app',
     router,
+    //中央事件总线的另一种写法
+    data: {
+        newBus: new Vue()
+    },
     render: h => h(App)
 })

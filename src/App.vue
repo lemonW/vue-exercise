@@ -24,7 +24,7 @@
 			<router-link class="mint-tab-item" to="/shopcart">
 				<mt-tab-item>
 					<img src="http://img06.jiuxian.com/bill/2016/0224/42baf46987b6460bb43b3396e9941653.png">
-					<span id="badgeId" class="badgeStyle mui-badge">0</span>
+					<span id="badgeId" class="badgeStyle mui-badge">{{count}}</span>
 				</mt-tab-item>
 			</router-link>
 			<router-link class="mint-tab-item" to="/mine">
@@ -45,7 +45,10 @@ img {
 	width: 55px;
 }
 
+
+
 /* 返回按钮的样式 */
+
 .backStyle {
 	font-size: 14px;
 	color: #fff;
@@ -56,32 +59,40 @@ img {
 	z-index: 5;
 }
 
+
+
 /* cart */
+
 .badgeStyle {
 	position: absolute;
 }
 </style>
 
 <script>
-import $ from 'jquery'
-import bus from './common/commonvue'
-//借助中央数据总线，购物车的数量就由其他的组件传来了根组件 
-bus.$on('updateBadge', goodsCount => {
-	let oldCount = $("#badgeId").text()
-	//旧的值加上新的值
-	let newCount = parseInt(oldCount) + goodsCount
-	$("#badgeId").text(newCount)
-})
+// import $ from 'jquery'
+// import bus from './common/commonvue'
+// //借助中央数据总线，购物车的数量就由其他的组件传来了根组件 
+// bus.$on('updateBadge', goodsCount => {
+// 	let oldCount = $("#badgeId").text()
+// 	//旧的值加上新的值
+// 	let newCount = parseInt(oldCount) + goodsCount
+// 	$("#badgeId").text(newCount)
+// })
 
 export default {
 	data() {
 		return {
 			isShowBack: false,
-			isShowTabBar: true
+			isShowTabBar: true,
+			count: 0
 		}
 	},
 	created() {
 		this.isShowOrHiddenBackAndTarBar(this.$route.path)
+
+		this.$root.newBus.$on('goodsCount', (goodsCount) => {
+			this.count += goodsCount
+		})
 	},
 	methods: {
 		goBack() {

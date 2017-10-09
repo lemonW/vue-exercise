@@ -92,11 +92,11 @@ import subswipe from '../subcomponents/subswipe.vue'
 import subnumber from '../subcomponents/subnumber.vue'
 
 //导入公共的Vue对象
-import bus from '../../common/commonvue.js'
+// import bus from '../../common/commonvue.js'
 
-//按需导入我们shopCartHelper中我需要的函数
+//按需导入我们shopCartTool中我需要的函数
 //addGoods是一个函数，{}
-import { addGoods } from '../../common/shopCartHelper.js'
+import { addGoods } from '../../common/shopCartTool.js'
 
 export default {
     data() {
@@ -136,8 +136,8 @@ export default {
         //加入购物车
         addToShopCart() {
             //1、非父子组件传值，传值给App.vue，更新购物车徽标值
-            bus.$emit('updateBadge', this.goodsCount)
-
+            // bus.$emit('goodsCount', this.goodsCount)
+            this.$root.newBus.$emit('goodsCount',this.goodsCount)
             //2.存储到localstorage key,value
             var goodsObj = {
                 "goodsId": this.$route.params.goodsId,
