@@ -1,48 +1,32 @@
-/**
- * 生产阶段所有Webpack的配置
- * 
- * 生产阶段的webpack的配置文件其实就是在开发阶段webpack配置的基础上，多增加一些额外的配置
- * 
- */
-
-//导入根据模版文件生成index.html的插件
+var webpack = require('webpack')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
-
 var path = require('path')
-
 //打包之前删除某个文件夹
 const CleanWebpackPlugin = require('clean-webpack-plugin')
-
-var webpack = require('webpack')
-
 //抽离css第三方包
 var ExtractTextPlugin = require("extract-text-webpack-plugin")
 
 module.exports = {
   entry: {
-    //属性名称代表你打包出来的最终的文件名称
-    //值，代表你要打包的是哪个第三方包(名称看node_modules中)
-    //  vue:['vue'],
-    //  vueRouter:['vue-router'],
-    //  vuex:['vuex'],
+    //属性,名称代表你打包出来的最终的文件名称;值，代表你要打包的是哪个第三方包;注意顺序
     quanjiatong: ['vue', 'vue-router'],
     vuePreview: ['vue-preview'],
     vueResource: ['vue-resource'],
     moment: ['moment'],
     mintUI: ['mint-ui'],
-    bundle: path.join(__dirname, 'src/main.js') //打包自己的业务逻辑代码，别忘记了
-  }, //打包入口文件
-  output: { //输出文件
+    bundle: path.join(__dirname, 'src/main.js') //打包自己的业务逻辑代码
+  },
+  output: {
     path: path.join(__dirname, "dist"),
     filename: 'js/[name].js'
   },
   module: {
     rules: [{
-        test: /\.vue$/, //凡是以.vue结尾的文件使用vue-loader去打包
+        test: /\.vue$/,
         loader: 'vue-loader' //兼容1.x和2.x es6--->es5(babel)
       },
       {
-        test: /\.css$/, //凡是以.vue结尾的文件使用vue-loader去打包
+        test: /\.css$/,
         // use: [//2.x的写法
         //   {
         //     loader: "style-loader"
@@ -57,12 +41,12 @@ module.exports = {
         })
       },
       {
-        test: /\.(png|svg|gif)$/, //凡是以.png,ttf结尾的文件使用vue-loader去打包
+        test: /\.(png|svg|gif)$/,
         use: [ //2.x的写法
           {
             /*limit：
-                表示的是一个阀值,如果当前我们资源中的图片大小
-                4kb就从bundle.js中剥离出来，如果小于4kb打包进bundle.js
+                表示的是一个阀值
+                如果小于4kb打包进bundle.js
  
                 name:打包出来的图片，放在那个文件夹下，用什么文件名称命名
                 [name]代表你原始的文件名称
@@ -74,21 +58,10 @@ module.exports = {
         ]
       },
       {
-        test: /\.(ttf)$/, //凡是以.png,ttf结尾的文件使用vue-loader去打包
-        use: [ //2.x的写法
-          {
-            /*limit：
-                表示的是一个阀值,如果当前我们资源中的图片大小
-                4kb就从bundle.js中剥离出来，如果小于4kb打包进bundle.js
- 
-                name:打包出来的图片，放在那个文件夹下，用什么文件名称命名
-                [name]代表你原始的文件名称
-                [hash:5] 让浏览器支持图片的缓存
-                [ext] 图片本身的拓展名
-             */
-            loader: "url-loader?limit=4000&name=fonts/[name]-[hash:5].[ext]"
-          }
-        ]
+        test: /\.(ttf)$/,
+        use: [{
+          loader: "url-loader?limit=4000&name=fonts/[name]-[hash:5].[ext]"
+        }]
       },
       {
         test: /\.js$/,
@@ -111,7 +84,7 @@ module.exports = {
   //     "mint-ui":"MINT"
   // },
   plugins: [
-    //推荐放在所有插件的最前头
+    //在所有插件的最前头
     new CleanWebpackPlugin("dist"),
 
     new HtmlWebpackPlugin({
@@ -121,8 +94,6 @@ module.exports = {
         removeComments: true, //去除注释
         collapseWhitespace: true, //去除空格
         removeAttributeQuotes: true
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
       }
     }),
 
@@ -132,7 +103,7 @@ module.exports = {
         NODE_ENV: '"production"'
       }
     }),
-    //压缩我们js代码，使用uglify
+    //压缩js代码，uglify
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false //去除警告信息
@@ -140,9 +111,7 @@ module.exports = {
       comments: false //去掉版权信息等注释
     }),
 
-    //不要把自己业务逻辑bundle放在这里，
     //这里只放第三方
-    // new webpack.optimize.CommonsChunkPlugin({name:["mintUI","moment","vueResource","vuePreview","vuex","vueRouter","vue"],minChunks: Infinity})
     new webpack.optimize.CommonsChunkPlugin({
       name: ["mintUI", "moment", "vueResource", "vuePreview", "quanjiatong"],
       minChunks: Infinity
