@@ -137,7 +137,7 @@ export default {
         addToShopCart() {
             //1、非父子组件传值，传值给App.vue，更新购物车徽标值
             // bus.$emit('goodsCount', this.goodsCount)
-            this.$root.newBus.$emit('goodsCount',this.goodsCount)
+            this.$root.newBus.$emit('goodsCount', this.goodsCount)
             //2.存储到localstorage key,value
             var goodsObj = {
                 "goodsId": this.$route.params.goodsId,
